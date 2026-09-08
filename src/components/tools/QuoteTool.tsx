@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
@@ -200,12 +200,6 @@ const [showDetails, setShowDetails] = useState(false);
 const [showRooms, setShowRooms] = useState(false);
 const [collapsedItems, setCollapsedItems] = useState<Set<string>>(() => new Set());
 const [historyQuery, setHistoryQuery] = useState("");
-/**
- * El iframe no debe tener src hasta que el contenedor haya terminado de
- * animarse a su tamaño final; si no, el visor de PDF calcula su layout con
- * un tamaño intermedio y se queda "congelado" así.
- */
-const [previewReady, setPreviewReady] = useState(false);
 /** History quote id currently awaiting a second tap to confirm deletion. */
 const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
 
@@ -243,28 +237,6 @@ const toggleItem = (itemId: string) => {
     [showPreview, selectedHotel, quote, logo],
   );
 
-  // Reset whenever the preview is (re)opened or closed.
-  useEffect(() => {
-    setPreviewReady(false);
-  }, [showPreview]);
-
-  // While the preview is open, brief window resizes toggle the src off and
-  // back on 200ms after the resize settles, so the PDF viewer recalculates
-  // its layout at the new final size.
-  useEffect(() => {
-    if (!showPreview) return;
-    let t: ReturnType<typeof setTimeout>;
-    const onResize = () => {
-      setPreviewReady(false);
-      clearTimeout(t);
-      t = setTimeout(() => setPreviewReady(true), 200);
-    };
-    window.addEventListener("resize", onResize);
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("resize", onResize);
-    };
-  }, [showPreview]);
 
   const saveRoomTypes = (types: string[]) => {
     if (!quote.hotelId) return;
@@ -398,7 +370,6 @@ const toggleItem = (itemId: string) => {
           {!showPreview ? (
             <motion.div
               key="quote-form"
-              layout
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -936,7 +907,6 @@ const toggleItem = (itemId: string) => {
               key="quote-collapsed"
               type="button"
               onClick={() => onClosePreview?.()}
-              layout
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
@@ -955,16 +925,14 @@ const toggleItem = (itemId: string) => {
           {showPreview && previewUrl && (
             <motion.div
               key="quote-preview"
-              layout
               initial={{ opacity: 0, scale: 0.985 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.985 }}
               transition={{ type: "spring", stiffness: 420, damping: 34 }}
-              onAnimationComplete={() => setPreviewReady(true)}
               className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-border"
             >
               <iframe
-                src={previewReady ? previewUrl ?? undefined : undefined}
+                src={previewUrl}
                 title="Quotation preview"
                 className="h-full w-full"
               />
