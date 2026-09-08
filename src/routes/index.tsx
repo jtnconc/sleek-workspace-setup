@@ -62,9 +62,11 @@ function WorkspacePage() {
 function Workspace({
   quotePreview,
   quoteHistory,
+  onCloseQuotePreview,
 }: {
   quotePreview: boolean;
   quoteHistory: boolean;
+  onCloseQuotePreview: () => void;
 }) {
   const { mode, activeTool } = useWorkspace();
   const toolMode = mode === "tool";
