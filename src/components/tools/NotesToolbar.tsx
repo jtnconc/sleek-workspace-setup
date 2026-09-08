@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Bold,
   Italic,
@@ -42,6 +43,13 @@ const btn =
 const activeBtn =
   "bg-primary text-primary-foreground border-primary hover:bg-primary hover:text-primary-foreground";
 
+/** Shared staggered scale+fade entrance used by every toolbar button. */
+const entrance = (i: number) => ({
+  initial: { opacity: 0, scale: 0.6 },
+  animate: { opacity: 1, scale: 1 },
+  transition: { type: "spring" as const, stiffness: 400, damping: 25, delay: i * 0.04 },
+});
+
 export function NotesToolbar() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [active, setActive] = useState({
@@ -79,28 +87,30 @@ export function NotesToolbar() {
 
   return (
     <div className="flex items-center gap-1.5">
-      <button
+      <motion.button
         type="button"
         aria-label="Bold"
         aria-pressed={active.bold}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => toggle("bold")}
         className={cn(btn, active.bold && activeBtn)}
+        {...entrance(0)}
       >
         <Bold className="size-[14px]" />
-      </button>
-      <button
+      </motion.button>
+      <motion.button
         type="button"
         aria-label="Italic"
         aria-pressed={active.italic}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => toggle("italic")}
         className={cn(btn, active.italic && activeBtn)}
+        {...entrance(1)}
       >
         <Italic className="size-[14px]" />
-      </button>
+      </motion.button>
 
-      <button
+      <motion.button
         type="button"
         aria-label="Bullet list"
         aria-pressed={active.list}
@@ -110,20 +120,22 @@ export function NotesToolbar() {
           syncActive();
         }}
         className={cn(btn, active.list && activeBtn)}
+        {...entrance(2)}
       >
         <List className="size-[14px]" />
-      </button>
+      </motion.button>
 
       <Popover>
         <PopoverTrigger asChild>
-          <button
+          <motion.button
             type="button"
             aria-label="Highlight text"
             onMouseDown={(e) => e.preventDefault()}
             className={btn}
+            {...entrance(3)}
           >
             <Highlighter className="size-[14px]" />
-          </button>
+          </motion.button>
         </PopoverTrigger>
         <PopoverContent align="start" className="w-auto p-2">
           <div className="flex items-center gap-1.5">
@@ -145,14 +157,15 @@ export function NotesToolbar() {
 
       <Popover>
         <PopoverTrigger asChild>
-          <button
+          <motion.button
             type="button"
             aria-label="Typography"
             onMouseDown={(e) => e.preventDefault()}
             className={btn}
+            {...entrance(4)}
           >
             <Type className="size-[14px]" />
-          </button>
+          </motion.button>
         </PopoverTrigger>
         <PopoverContent align="start" className="w-56 space-y-3 p-3">
           <div className="space-y-1.5">
@@ -177,15 +190,16 @@ export function NotesToolbar() {
         </PopoverContent>
       </Popover>
 
-      <button
+      <motion.button
         type="button"
         aria-label="Insert image"
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => fileRef.current?.click()}
         className={btn}
+        {...entrance(5)}
       >
         <ImagePlus className="size-[14px]" />
-      </button>
+      </motion.button>
       <input
         ref={fileRef}
         type="file"
