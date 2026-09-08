@@ -363,7 +363,7 @@ const toggleItem = (itemId: string) => {
   };
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col gap-4 lg:flex-row">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pr-1">
         <AnimatePresence initial={false} mode="wait">
           {!showPreview ? (
