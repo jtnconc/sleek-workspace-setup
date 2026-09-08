@@ -46,7 +46,11 @@ function WorkspacePage() {
               onToggleQuoteHistory={() => setQuoteHistory((v) => !v)}
             />
             <main className="mx-auto flex w-full max-w-[1240px] min-h-0 flex-1 flex-col px-5 pb-3 pt-0">
-              <Workspace quotePreview={quotePreview} quoteHistory={quoteHistory} />
+              <Workspace
+                quotePreview={quotePreview}
+                quoteHistory={quoteHistory}
+                onCloseQuotePreview={() => setQuotePreview(false)}
+              />
             </main>
           </div>
         </WorkspaceProvider>
