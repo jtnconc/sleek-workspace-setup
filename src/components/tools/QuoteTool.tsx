@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import {
+  Check,
   ChevronDown,
   ChevronUp,
   Copy,
@@ -177,6 +178,7 @@ export function QuoteTool({ showPreview = false, showHistory = false }: QuoteToo
     quoteHistory,
     loadQuote,
     duplicateQuote,
+    deleteQuote,
     hotelLogos,
     setHotelLogo,
     hotelDetails,
@@ -192,6 +194,8 @@ const [showDetails, setShowDetails] = useState(false);
 const [showRooms, setShowRooms] = useState(false);
 const [collapsedItems, setCollapsedItems] = useState<Set<string>>(() => new Set());
 const [historyQuery, setHistoryQuery] = useState("");
+/** History quote id currently awaiting a second tap to confirm deletion. */
+const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
 
 const filteredHistory = useMemo(() => {
   const q = historyQuery.trim().toLowerCase();
@@ -966,6 +970,36 @@ const toggleItem = (itemId: string) => {
                     <FileDown className="size-3" />
                     PDF
                   </button>
+                  {confirmingDelete === q.id ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          deleteQuote(q.id);
+                          setConfirmingDelete(null);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-full border border-destructive/50 bg-destructive/10 px-2.5 py-1 text-[11px] font-medium text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                      >
+                        <Check className="size-3" />
+                        {lang === "es" ? "¿Eliminar?" : "Delete?"}
+                      </button>
+                      <button
+                        onClick={() => setConfirmingDelete(null)}
+                        className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                      >
+                        <X className="size-3" />
+                        {lang === "es" ? "Cancelar" : "Cancel"}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmingDelete(q.id)}
+                      aria-label={lang === "es" ? "Eliminar cotización" : "Delete quote"}
+                      className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-destructive"
+                    >
+                      <Trash2 className="size-3" />
+                      {lang === "es" ? "Eliminar" : "Delete"}
+                    </button>
+                  )}
                 </div>
               </li>
             ))}
