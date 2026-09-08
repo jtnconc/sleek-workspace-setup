@@ -128,31 +128,27 @@ export function RatesTool() {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          { label: "Rate per night", icon: BadgeDollarSign, value: money(result.avgPerNight), valueClass: "text-badge-weekday-text", bgClass: "bg-surface-3", bold: true },
-          { label: "Nights", icon: Moon, value: result.nightCount.toString(), valueClass: "text-foreground" },
-          { label: "Total stay", icon: Wallet, value: money(result.totalStay) },
-          { label: "Total + ITBMS", icon: Receipt, value: money(result.totalWithTax), valueClass: "text-entity-phone" },
+          { label: "Rate per night", icon: BadgeDollarSign, value: money(result.avgPerNight), pillClass: "bg-badge-weekday-bg text-badge-weekday-text" },
+          { label: "Nights", icon: Moon, value: result.nightCount.toString(), pillClass: "bg-surface-3 text-foreground" },
+          { label: "Total stay", icon: Wallet, value: money(result.totalStay), pillClass: "bg-surface-3 text-foreground" },
+          { label: "Total + ITBMS", icon: Receipt, value: money(result.totalWithTax), pillClass: "bg-entity-phone/10 text-entity-phone" },
         ].map((s) => (
           <div
             key={s.label}
-            className={cn(
-              "@container flex flex-col gap-1 rounded-2xl p-4 @[13rem]:flex-row @[13rem]:items-center @[13rem]:justify-between @[13rem]:gap-2",
-              s.bgClass ?? "bg-surface-2",
-            )}
+            className="@container flex flex-col gap-2 rounded-2xl bg-surface-2 p-4 @[13rem]:flex-row @[13rem]:items-center @[13rem]:justify-between @[13rem]:gap-2"
           >
             <p className="label-xs flex min-w-0 items-center gap-1">
               <s.icon className="size-3 shrink-0" aria-hidden />
               <span className="truncate">{s.label}</span>
             </p>
-            <p
+            <span
               className={cn(
-                "font-mono text-[17px] tracking-tight @[13rem]:text-right",
-                s.bold && "font-bold",
-                s.valueClass,
+                "w-fit rounded-full px-3 py-1.5 font-mono text-[19px] font-bold leading-none tracking-tight",
+                s.pillClass,
               )}
             >
               {s.value}
-            </p>
+            </span>
           </div>
         ))}
       </div>
