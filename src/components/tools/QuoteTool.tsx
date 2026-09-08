@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
@@ -200,6 +200,8 @@ const [showDetails, setShowDetails] = useState(false);
 const [showRooms, setShowRooms] = useState(false);
 const [collapsedItems, setCollapsedItems] = useState<Set<string>>(() => new Set());
 const [historyQuery, setHistoryQuery] = useState("");
+/** Bumped on window resize so the preview iframe remounts (Safari PDF redraw fix). */
+const [previewReloadKey, setPreviewReloadKey] = useState(0);
 /** History quote id currently awaiting a second tap to confirm deletion. */
 const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
 
@@ -236,6 +238,23 @@ const toggleItem = (itemId: string) => {
     () => (showPreview && selectedHotel ? quotePdfPreviewUrl(quote, selectedHotel, logo) : null),
     [showPreview, selectedHotel, quote, logo],
   );
+
+  // Force the preview iframe to remount after the window is resized while the
+  // preview is open. Safari/WebKit don't redraw embedded PDFs in iframes on
+  // resize, so a remount is required for the content to relayout.
+  useEffect(() => {
+    if (!showPreview) return;
+    let t: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(t);
+      t = setTimeout(() => setPreviewReloadKey((k) => k + 1), 200);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [showPreview]);
 
   const saveRoomTypes = (types: string[]) => {
     if (!quote.hotelId) return;
@@ -933,7 +952,12 @@ const toggleItem = (itemId: string) => {
               transition={{ type: "spring", stiffness: 420, damping: 34 }}
               className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-border"
             >
-              <iframe src={previewUrl} title="Quotation preview" className="h-full w-full" />
+              <iframe
+                key={`${previewUrl}-${previewReloadKey}`}
+                src={previewUrl}
+                title="Quotation preview"
+                className="h-full w-full"
+              />
             </motion.div>
           )}
         </AnimatePresence>
