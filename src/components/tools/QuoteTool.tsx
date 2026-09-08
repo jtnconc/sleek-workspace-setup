@@ -363,7 +363,7 @@ const toggleItem = (itemId: string) => {
   };
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col gap-4 lg:flex-row">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pr-1">
         <AnimatePresence initial={false} mode="wait">
           {!showPreview ? (
@@ -912,12 +912,12 @@ const toggleItem = (itemId: string) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ type: "spring", stiffness: 420, damping: 34 }}
-              className="flex shrink-0 items-center justify-between rounded-full bg-surface-2 px-4 py-2.5 text-left transition-colors hover:bg-secondary"
+              className="relative flex shrink-0 items-center justify-center rounded-full bg-surface-2 px-4 py-2.5 text-center transition-colors hover:bg-secondary"
             >
-              <span className="text-[13px] font-semibold">
-                {lang === "es" ? "Cotizador" : "Quote form"}
+              <span className="label-xs">
+                Quotation
               </span>
-              <ChevronDown className="size-4 text-muted-foreground" />
+              <ChevronDown className="absolute right-4 size-4 text-muted-foreground" />
             </motion.button>
           )}
         </AnimatePresence>
