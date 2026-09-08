@@ -91,7 +91,11 @@ function Workspace({
             {activeTool === "notes" && <NotesTool />}
             {activeTool === "rates" && <RatesTool />}
             {activeTool === "quote" && (
-              <QuoteTool showPreview={quotePreview} showHistory={quoteHistory} />
+              <QuoteTool
+                showPreview={quotePreview}
+                showHistory={quoteHistory}
+                onClosePreview={onCloseQuotePreview}
+              />
             )}
           </div>
         )}
