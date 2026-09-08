@@ -143,7 +143,7 @@ export function RatesTool() {
             </p>
             <span
               className={cn(
-                "w-fit rounded-full px-3 py-1.5 font-mono text-[19px] font-bold leading-none tracking-tight",
+                "w-fit self-end rounded-full px-3 py-1.5 font-mono text-[19px] font-bold leading-none tracking-tight @[13rem]:self-auto",
                 s.pillClass,
               )}
             >
