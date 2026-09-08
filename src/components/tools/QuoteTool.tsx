@@ -364,7 +364,18 @@ const toggleItem = (itemId: string) => {
 
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col gap-4 lg:flex-row">
-      <div className="min-h-0 min-w-0 flex-1 overflow-auto pr-1">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pr-1">
+        <AnimatePresence initial={false} mode="wait">
+          {!showPreview ? (
+            <motion.div
+              key="quote-form"
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="min-h-0 flex-1 overflow-y-auto"
+            >
         <article className="min-w-0 rounded-2xl border border-border bg-surface p-4 sm:p-6">
           <header className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
