@@ -953,8 +953,8 @@ const toggleItem = (itemId: string) => {
               className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-border"
             >
               <iframe
-                key={`${previewUrl}-${previewReloadKey}`}
-                src={previewUrl}
+                key={previewReloadKey}
+                src={previewUrl ? `${previewUrl}#r=${previewReloadKey}` : undefined}
                 title="Quotation preview"
                 className="h-full w-full"
               />
