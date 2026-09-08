@@ -133,22 +133,21 @@ export function RatesTool() {
           { label: "Total stay", icon: Wallet, value: money(result.totalStay), pillClass: "bg-surface-3 text-foreground" },
           { label: "Total + ITBMS", icon: Receipt, value: money(result.totalWithTax), pillClass: "bg-entity-phone/10 text-entity-phone" },
         ].map((s) => (
-          <div
-            key={s.label}
-            className="@container flex flex-col gap-2 rounded-2xl bg-surface-2 p-4 @[13rem]:flex-row @[13rem]:items-center @[13rem]:justify-between @[13rem]:gap-2"
-          >
-            <p className="label-xs flex min-w-0 items-center gap-1">
-              <s.icon className="size-3 shrink-0" aria-hidden />
-              <span className="truncate">{s.label}</span>
-            </p>
-            <span
-              className={cn(
-                "w-fit self-end rounded-full px-3 py-1.5 font-mono text-[19px] font-bold leading-none tracking-tight @[13rem]:self-auto",
-                s.pillClass,
-              )}
-            >
-              {s.value}
-            </span>
+          <div key={s.label} className="@container rounded-2xl bg-surface-2 p-4">
+            <div className="flex flex-col gap-2 @[13rem]:flex-row @[13rem]:items-center @[13rem]:justify-between @[13rem]:gap-2">
+              <p className="label-xs flex min-w-0 items-center gap-1">
+                <s.icon className="size-3 shrink-0" aria-hidden />
+                <span className="truncate">{s.label}</span>
+              </p>
+              <span
+                className={cn(
+                  "w-fit self-end rounded-full px-3 py-1.5 font-mono text-[19px] font-bold leading-none tracking-tight @[13rem]:self-auto",
+                  s.pillClass,
+                )}
+              >
+                {s.value}
+              </span>
+            </div>
           </div>
         ))}
       </div>
