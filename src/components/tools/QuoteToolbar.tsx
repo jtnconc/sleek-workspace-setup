@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Eye, FileDown, History } from "lucide-react";
 import { useWorkspace } from "@/workspace/store";
 import { getHotel } from "@/lib/hotels";
@@ -28,34 +29,50 @@ export function QuoteToolbar({ preview, onTogglePreview, history, onToggleHistor
     resetQuote();
   };
 
+  const buttons = [
+    {
+      key: "preview",
+      icon: Eye,
+      label: "Preview quotation",
+      disabled: !selected,
+      onClick: onTogglePreview,
+      active: preview,
+    },
+    {
+      key: "download",
+      icon: FileDown,
+      label: "Download PDF",
+      disabled: !selected,
+      onClick: download,
+      active: false,
+    },
+    {
+      key: "history",
+      icon: History,
+      label: "Quote history",
+      disabled: false,
+      onClick: onToggleHistory,
+      active: history,
+    },
+  ];
+
   return (
     <div className="flex items-center gap-1.5">
-      <button
-        type="button"
-        aria-label="Preview quotation"
-        disabled={!selected}
-        onClick={onTogglePreview}
-        className={cn(btn, preview && activeBtn)}
-      >
-        <Eye className="size-[14px]" />
-      </button>
-      <button
-        type="button"
-        aria-label="Download PDF"
-        disabled={!selected}
-        onClick={download}
-        className={btn}
-      >
-        <FileDown className="size-[14px]" />
-      </button>
-      <button
-        type="button"
-        aria-label="Quote history"
-        onClick={onToggleHistory}
-        className={cn(btn, history && activeBtn)}
-      >
-        <History className="size-[14px]" />
-      </button>
+      {buttons.map((b, index) => (
+        <motion.button
+          key={b.key}
+          type="button"
+          aria-label={b.label}
+          disabled={b.disabled}
+          onClick={b.onClick}
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 25, delay: index * 0.04 }}
+          className={cn(btn, b.active && activeBtn)}
+        >
+          <b.icon className="size-[14px]" />
+        </motion.button>
+      ))}
     </div>
   );
 }
