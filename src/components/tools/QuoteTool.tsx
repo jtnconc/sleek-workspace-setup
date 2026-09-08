@@ -169,9 +169,14 @@ function RoomTypesManager({
 interface QuoteToolProps {
   showPreview?: boolean;
   showHistory?: boolean;
+  onClosePreview?: () => void;
 }
 
-export function QuoteTool({ showPreview = false, showHistory = false }: QuoteToolProps) {
+export function QuoteTool({
+  showPreview = false,
+  showHistory = false,
+  onClosePreview,
+}: QuoteToolProps) {
   const {
     quote,
     updateQuote,
