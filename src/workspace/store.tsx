@@ -305,6 +305,8 @@ interface WorkspaceApi extends WorkspaceState {
   archiveQuote: () => void;
   loadQuote: (id: string) => void;
   duplicateQuote: (id: string) => void;
+  /** Permanently remove a quote from the saved history. */
+  deleteQuote: (id: string) => void;
   /** Reset the quote form to blank defaults (keeping hotel + language). */
   resetQuote: () => void;
 }
@@ -1083,6 +1085,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           const q = s.quoteHistory.find((x) => x.id === id) ?? s.quote;
           return { ...s, quote: { ...q, id: `q-${uid()}`, updatedAt: new Date().toISOString() } };
         }),
+      deleteQuote: (id) =>
+        setState((s) => ({
+          ...s,
+          quoteHistory: s.quoteHistory.filter((q) => q.id !== id),
+        })),
       resetQuote: () =>
         setState((s) => {
           const hotel = s.quote.hotelId ? getHotel(s.quote.hotelId) : getHotel("residence-inn");
