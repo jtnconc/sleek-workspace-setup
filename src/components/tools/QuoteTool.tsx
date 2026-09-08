@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
   ChevronDown,
@@ -169,9 +170,14 @@ function RoomTypesManager({
 interface QuoteToolProps {
   showPreview?: boolean;
   showHistory?: boolean;
+  onClosePreview?: () => void;
 }
 
-export function QuoteTool({ showPreview = false, showHistory = false }: QuoteToolProps) {
+export function QuoteTool({
+  showPreview = false,
+  showHistory = false,
+  onClosePreview,
+}: QuoteToolProps) {
   const {
     quote,
     updateQuote,
@@ -358,7 +364,18 @@ const toggleItem = (itemId: string) => {
 
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col gap-4 lg:flex-row">
-      <div className="min-h-0 min-w-0 flex-1 overflow-auto pr-1">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pr-1">
+        <AnimatePresence initial={false} mode="wait">
+          {!showPreview ? (
+            <motion.div
+              key="quote-form"
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="min-h-0 flex-1 overflow-y-auto"
+            >
         <article className="min-w-0 rounded-2xl border border-border bg-surface p-4 sm:p-6">
           <header className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
@@ -884,12 +901,42 @@ const toggleItem = (itemId: string) => {
             </div>
           )}
         </article>
+            </motion.div>
+          ) : (
+            <motion.button
+              key="quote-collapsed"
+              type="button"
+              onClick={() => onClosePreview?.()}
+              layout
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+              className="flex shrink-0 items-center justify-between rounded-full bg-surface-2 px-4 py-2.5 text-left transition-colors hover:bg-secondary"
+            >
+              <span className="text-[13px] font-semibold">
+                {lang === "es" ? "Cotizador" : "Quote form"}
+              </span>
+              <ChevronDown className="size-4 text-muted-foreground" />
+            </motion.button>
+          )}
+        </AnimatePresence>
 
-        {showPreview && previewUrl && (
-          <div className="mt-4 overflow-hidden rounded-2xl border border-border">
-            <iframe src={previewUrl} title="Quotation preview" className="h-[520px] w-full" />
-          </div>
-        )}
+        <AnimatePresence initial={false}>
+          {showPreview && previewUrl && (
+            <motion.div
+              key="quote-preview"
+              layout
+              initial={{ opacity: 0, scale: 0.985 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.985 }}
+              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+              className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-border"
+            >
+              <iframe src={previewUrl} title="Quotation preview" className="h-full w-full" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {showHistory && (
